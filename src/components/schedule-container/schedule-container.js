@@ -63,11 +63,11 @@ function ScheduleContainer() {
     })
 
     let scheduleArray = []
-    let testCron = '0/4 * * * *';
+    let testCron = '0,30 * * * *';
     let options = {
         currentDate: dateTime,
         utc: true,
-        endDate: new Date('21 June 2019 18:40:00 UTC'),
+        endDate: new Date('22 June 2019 18:40:00 UTC'),
         iterator: true
     }
 
