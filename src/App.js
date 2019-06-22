@@ -7,7 +7,6 @@ import ReadBtn from './components/upload-file/upload-file'
 function App() {
   return (
     <div className="App">
-      <ReadBtn />
       <ScheduleContainer />
     </div>
   );
