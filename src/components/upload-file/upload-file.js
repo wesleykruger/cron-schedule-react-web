@@ -12,6 +12,4 @@ function ReadBtn() {
     )
 }
 
-
-
 export default ReadBtn;
