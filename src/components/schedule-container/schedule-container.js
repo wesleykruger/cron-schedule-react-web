@@ -7,10 +7,7 @@ const fs = require("fs");
 const readline = require("readline");
 
 function ScheduleContainer() {
-  const [cronArr, setCronArr] = useState([]);
-  const [descArr, setDescArr] = useState([]);
-  const [test, setTest] = useState('unchanged');
-  var dictArray = []
+  const [cronDict, setCronDict] = useState([]);
 
   var today = new Date();
   var date =
@@ -22,22 +19,55 @@ function ScheduleContainer() {
   // useEffect(() => {
   // })
 
+  function parseCronObj(cronObjArr) {
+    let scheduleArray = [];
+    console.log(cronObjArr);
+    for (let i in cronObjArr) {
+      let currentCronName = cronObjArr[i].name;
+      console.log('my cron name: ' + currentCronName);
+
+      let currentCronExp = cronObjArr[i].cronExp;
+      let options = {
+        currentDate: dateTime,
+        utc: true,
+        endDate: new Date("15 July 2019 18:40:00 UTC"),
+        iterator: true
+      };
+
+      try {
+        let interval = cronParser.parseExpression(currentCronExp, options);
+        while (true) {
+          try {
+            let obj = interval.next();
+            scheduleArray.push({
+                name: currentCronName,
+                runTime: obj.value.toString()
+            });
+          } catch (e) {
+            console.log(e);
+            break;
+          }
+        }
+      } catch (err) {
+        console.log("Error: " + err.message);
+      }
+    }
+    console.log(scheduleArray);
+    return scheduleArray;
+  }
+
   function ReadFile() {
     let myFile;
-    let overrideFile;
     let lookForCron = false;
     if (document.getElementById("inputFileToLoad").files.length > 0) {
       myFile = document.getElementById("inputFileToLoad").files[0];
-    }
-    if (document.getElementById("overrideFileToLoad").files.length > 0) {
-      overrideFile = document.getElementById("overrideFileToLoad").files[0];
     }
     if (myFile) {
       let reader = new FileReader();
       reader.onload = function(fileLoadedEvent) {
         let lines = fileLoadedEvent.target.result.split("\n");
-        var descriptionDict = {}
-        var cronDict = {}
+        let cronObj = {};
+        var cronObjArr = [];
         let tempDesc = [];
         for (let line in lines) {
           if (!lookForCron) {
@@ -54,69 +84,45 @@ function ScheduleContainer() {
               let value = lines[line].substring(lines[line].indexOf("=") + 1);
               tempDesc.push(value);
             } else if (!lines[line].startsWith("#")) {
-              let cronTitle = lines[line].substring(0, lines[line].indexOf("="));
+              let cronTitle = lines[line].substring(
+                0,
+                lines[line].indexOf("=")
+              );
               console.log(cronTitle);
-              let value = lines[line].substring(lines[line].indexOf("=") + 1);
+              //let value = lines[line].substring(lines[line].indexOf("=") + 1);
               lookForCron = false;
-              cronDict[cronTitle] = value;
-              descriptionDict[cronTitle] = tempDesc.join('\n');
+              //cronDict[cronTitle] = value;
+              cronObj.name = lines[line].substring(0, lines[line].indexOf("="));
+              cronObj.description = tempDesc.join("\n");
+              cronObj.cronExp = lines[line].substring(
+                lines[line].indexOf("=") + 1
+              );
+              //descriptionDict[cronTitle] = tempDesc.join('\n');
               tempDesc = [];
+              cronObjArr.push(cronObj);
+              cronObj = {};
             }
           }
         }
-        dictArray.push(cronDict);
-        dictArray.push(descriptionDict);
-        setCronArr(dictArray);
-    };
+        let parsedCronSchedule = parseCronObj(cronObjArr);
+        setCronDict(parsedCronSchedule);
+      };
       reader.readAsText(myFile);
-    //   if (overrideFile) {
-    //     checkOverrides();
-    //   }
     }
-  }
-
-  function checkOverrides(overrideArray) {
-    for (let array in overrideArray) {
-      console.log(overrideArray[array]);
-    }
-  }
-
-
-  let scheduleArray = [];
-  let testCron = "0,30 * * * *";
-  let options = {
-    currentDate: dateTime,
-    utc: true,
-    endDate: new Date("15 July 2019 18:40:00 UTC"),
-    iterator: true
-  };
-
-  try {
-    let interval = cronParser.parseExpression(testCron, options);
-    while (true) {
-      try {
-        let obj = interval.next();
-        scheduleArray.push(obj.value.toString());
-      } catch (e) {
-        break;
-      }
-    }
-  } catch (err) {
-    console.log("Error: " + err.message);
   }
 
   return (
     <div>
       <input id="inputFileToLoad" type="file" />
-      <input id="overrideFileToLoad" type="file" />{" "}
-      {cronArr.map(date => (
-        <li> {date} </li>
+      {cronDict.map(cronObj => (
+        <li> {cronObj.name}: {cronObj.runTime} </li>
       ))}{" "}
       <Button onClick={() => ReadFile()}>Execute</Button>
       <h1>BREAK</h1>
-      {Object.keys(cronArr).map(name => (
-            <Services categories={this.state.dict[name]}></Services>
-          ))}
+      {/* {cronDict.map(vals => {
+          Object.keys(cronDict).map((key, index) => ( 
+            <p key={index}> this is my key {key} and this is my value {cronDict[key]}</p> 
+        ))})} */}
     </div>
   );
 }
