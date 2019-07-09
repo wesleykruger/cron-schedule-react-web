@@ -119,10 +119,6 @@ function ScheduleContainer() {
       ))}{" "}
       <Button onClick={() => ReadFile()}>Execute</Button>
       <h1>BREAK</h1>
-      {/* {cronDict.map(vals => {
-          Object.keys(cronDict).map((key, index) => ( 
-            <p key={index}> this is my key {key} and this is my value {cronDict[key]}</p> 
-        ))})} */}
     </div>
   );
 }
