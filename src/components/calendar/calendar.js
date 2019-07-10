@@ -9,11 +9,6 @@ const MyCalendar = props => (
     <Calendar
       localizer={localizer}
       events={[
-        {
-          start: new Date(),
-          end: new Date(moment().add(1, "days")),
-          title: "Some title"
-        }
       ]}
       startAccessor="start"
       endAccessor="end"
