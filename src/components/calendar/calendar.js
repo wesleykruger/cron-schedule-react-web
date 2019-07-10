@@ -4,16 +4,11 @@ import moment from 'moment'
 
 const localizer = momentLocalizer(moment)
 
-const MyCalendar = props => (
+const CronCalendar = props => (
   <div>
     <Calendar
       localizer={localizer}
-      events={[{
-        title: 'test',
-        start: new Date("2019-07-09T10:00:00Z"),
-        end: new Date("2019-07-09T12:00:00Z")
-      }
-      ]}
+      events={props.schedule}
       startAccessor="start"
       endAccessor="end"
       localizer={localizer}
@@ -23,4 +18,4 @@ const MyCalendar = props => (
     />
   </div>
 )
-export default MyCalendar;
+export default CronCalendar;
