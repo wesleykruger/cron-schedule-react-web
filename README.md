@@ -3,6 +3,8 @@
 ## Description
 This was built to satisfy a business need to visualize when cron jobs will run on our active project sites. Our cron schedules are stored in properties files, mixed among large amounts of other data. Sample files have been uploaded into the resources directory. This program will allow you to upload one of those files, extract and parse the schedules of your various cron jobs, and will then display upcoming jobs in an easy-to-understand calendar view.
 
+On a more personal level, I wanted to use this as a chance to practice React hooks and to build an application using entirely functional components.
+
 ## To Use
 First, ensure that you have Node.js installed. Download this package, then navigate to its directory in your console. Run "npm i", then "npm start". The program will initialize on your localhost and can be viewed in your browser.
 
